@@ -1,0 +1,6 @@
+# deploy.yml
+---
+- hosts: all
+  become: yes
+  roles:
+    - elastic_agent_standalone

@@ -1,0 +1,13 @@
+  # elastic_agent_role/templates/elastic-agent.yml.j2
+outputs:
+  default:
+    type: elasticsearch
+    hosts: ["http://localhost:9200"]
+    username: "elastic"
+    password: "changeme"
+agent:
+  monitoring:
+    enabled: true
+    use_output: default
+    logs: true
+    metrics: true

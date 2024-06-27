@@ -1,0 +1,5 @@
+# elastic_agent_role/tasks/main.yml
+---
+- include_tasks: install.yml
+
+- include_tasks: status.yml

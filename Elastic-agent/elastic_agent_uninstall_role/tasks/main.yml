@@ -1,0 +1,57 @@
+# elastic_agent_uninstall/tasks/main.yml
+---
+- name: Stop Elastic Agent service
+  systemd:
+    name: elastic-agent
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+  register: stop_service_result
+
+- name: Elastic Agent service stopped
+  debug:
+    msg: "Elastic Agent service stopped: {{ stop_service_result }}"
+
+- name: Remove Elastic Agent installation directory
+  file:
+    path: "{{ elastic_agent_install_dir }}"
+    state: absent
+  ignore_errors: yes
+  register: remove_install_dir_result
+
+- name: Elastic Agent installation directory removed
+  debug:
+    msg: "Elastic Agent installation directory removed: {{ remove_install_dir_result }}"
+
+- name: Remove Elastic Agent symlink
+  file:
+    path: /usr/bin/elastic-agent
+    state: absent
+  ignore_errors: yes
+  register: remove_symlink_result
+
+- name: Elastic Agent symlink removed
+  debug:
+    msg: "Elastic Agent symlink removed: {{ remove_symlink_result }}"
+
+- name: Remove Elastic Agent configuration directory
+  file:
+    path: /etc/elastic-agent
+    state: absent
+  ignore_errors: yes
+  register: remove_config_dir_result
+
+- name: Elastic Agent configuration directory removed
+  debug:
+    msg: "Elastic Agent configuration directory removed: {{ remove_config_dir_result }}"
+
+- name: Remove Elastic Agent log directory
+  file:
+    path: /var/log/elastic-agent
+    state: absent
+  ignore_errors: yes
+  register: remove_log_dir_result
+
+- name: Elastic Agent log directory removed
+  debug:
+    msg: "Elastic Agent log directory removed: {{ remove_log_dir_result }}"

@@ -1,0 +1,95 @@
+# elastic_agent_role/tasks/install.yml
+---
+- name: Ensure expect package is installed (Ubuntu)
+  apt:
+    name: expect
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Ensure expect package is installed (RedHat)
+  yum:
+    name: expect
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Check if Elastic Agent is already installed
+  stat:
+    path: "{{ elastic_agent_install_dir }}/elastic-agent"
+  register: elastic_agent_installed
+
+- name: Elastic Agent is already installed
+  debug:
+    msg: "Elastic Agent is already installed and running."
+  when: elastic_agent_installed.stat.exists
+
+- name: Set fact for new installation
+  set_fact:
+    elastic_agent_new_install: true
+  when: not elastic_agent_installed.stat.exists
+
+- name: Download Elastic Agent
+  get_url:
+    url: "{{ elastic_agent_url }}"
+    dest: "/tmp/elastic-agent.tar.gz"
+  when: not elastic_agent_installed.stat.exists
+
+- name: Extract Elastic Agent
+  unarchive:
+    src: "/tmp/elastic-agent.tar.gz"
+    dest: "/opt/"
+    remote_src: yes
+  when: not elastic_agent_installed.stat.exists
+
+- name: Install Elastic Agent
+  shell: |
+    expect -c '
+    spawn /opt/elastic-agent-{{ elastic_agent_version }}-linux-x86_64/elastic-agent install
+    expect "Do you want to continue? \\[Y/n\\]:"
+    send "Y\r"
+    expect eof
+    '
+  args:
+    creates: "{{ elastic_agent_install_dir }}/elastic-agent"
+  when: not elastic_agent_installed.stat.exists
+
+- name: Remove existing Elastic Agent file
+  file:
+    path: /usr/bin/elastic-agent
+    state: absent
+  when: not elastic_agent_installed.stat.exists
+
+- name: Create symlink to Elastic Agent
+  file:
+    src: "/opt/elastic-agent-{{ elastic_agent_version }}-linux-x86_64/elastic-agent"
+    dest: "/usr/bin/elastic-agent"
+    state: link
+  when: not elastic_agent_installed.stat.exists
+
+- name: Ensure Elastic Agent configuration directory exists
+  file:
+    path: /etc/elastic-agent
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy Elastic Agent configuration file
+  template:
+    src: elastic-agent.yml.j2
+    dest: /etc/elastic-agent/elastic-agent.yml
+  when: not elastic_agent_installed.stat.exists
+
+- name: Ensure /var/log/elastic-agent directory exists
+  file:
+    path: /var/log/elastic-agent
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Start and enable Elastic Agent service
+  systemd:
+    name: elastic-agent
+    state: started
+    enabled: yes
+  when: not elastic_agent_installed.stat.exists

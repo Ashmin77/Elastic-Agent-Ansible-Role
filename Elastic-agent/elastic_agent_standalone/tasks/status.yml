@@ -1,0 +1,18 @@
+# elastic_agent_role/tasks/status.yml
+---
+- name: Check Elastic Agent service status
+  systemd:
+    name: elastic-agent
+    state: started
+    enabled: yes
+  when: elastic_agent_installed.stat.exists or elastic_agent_new_install is defined
+
+- name: Output Elastic Agent service status
+  command: systemctl status elastic-agent
+  register: elastic_agent_status
+  when: elastic_agent_installed.stat.exists or elastic_agent_new_install is defined
+
+- name: Display Elastic Agent service status
+  debug:
+    msg: "{{ elastic_agent_status.stdout }}"
+  when: elastic_agent_installed.stat.exists or elastic_agent_new_install is defined

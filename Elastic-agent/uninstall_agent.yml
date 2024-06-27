@@ -1,0 +1,6 @@
+# uninstall.yml
+---
+- hosts: all
+  become: yes
+  roles:
+    - elastic_agent_uninstall_role

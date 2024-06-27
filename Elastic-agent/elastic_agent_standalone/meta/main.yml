@@ -1,0 +1,19 @@
+# elastic_agent_role/meta/main.yml
+---
+galaxy_info:
+  author: Ash
+  description: Ansible role to install Elastic Agent
+  license: MIT
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+    - name: CentOS
+      versions:
+        - 7
+        - 8
+
+dependencies: []

@@ -1,0 +1,5 @@
+# elastic_agent_role/defaults/main.yml
+---
+elastic_agent_version: "7.12.0"
+elastic_agent_url: "https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-{{ elastic_agent_version }}-linux-x86_64.tar.gz"
+elastic_agent_install_dir: "/opt/Elastic/Agent"
