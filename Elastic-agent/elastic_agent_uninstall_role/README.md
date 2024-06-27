@@ -1,38 +1,69 @@
-Role Name
-=========
 
-A brief description of the role goes here.
+## Elastic Agent Uninstall Role
 
-Requirements
-------------
+This Ansible role uninstalls the Elastic Agent from Ubuntu and RedHat servers, including cleanup of any configuration, logs, and binaries.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+### Directory Structure
 
-Role Variables
---------------
+```
+elastic_agent_uninstall_role
+├── README.md
+├── defaults
+│   └── main.yml
+├── files
+├── handlers
+│   └── main.yml
+├── meta
+│   └── main.yml
+├── tasks
+│   └── main.yml
+├── templates
+├── tests
+│   ├── inventory
+│   └── test.yml
+└── vars
+  └── main.yml
+```
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### Variables
 
-Dependencies
-------------
+- `elastic_agent_install_dir`: Installation directory for Elastic Agent (default: "/opt/Elastic/Agent")
+- `elastic_agent_config_dir`: Configuration directory for Elastic Agent (default: "/etc/elastic-agent")
+- `elastic_agent_log_dir`: Log directory for Elastic Agent (default: "/var/log/elastic-agent")
+- `elastic_agent_bin`: Binary location for Elastic Agent (default: "/usr/bin/elastic-agent")
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### Usage
 
-Example Playbook
-----------------
+Include this role in your playbook:
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yaml
+- hosts: all
+  become: yes
+  roles:
+  - elastic_agent_uninstall_role
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+### Tasks
 
-License
--------
+- Stop and Disable the Service: Stops the Elastic Agent service and disables it to prevent it from starting automatically.
+- Remove Installation Directory: Deletes the directory where the Elastic Agent is installed.
+- Remove Symlink: Removes the symlink to the Elastic Agent binary.
+- Remove Configuration Directory: Deletes the configuration directory for the Elastic Agent.
+- Remove Log Directory: Deletes the log directory for the Elastic Agent.
+- Debug Messages: Provides clear output messages indicating the status of each removal step.
 
-BSD
+### Example Playbook
 
-Author Information
-------------------
+```yaml
+- hosts: all
+  become: yes
+  roles:
+  - elastic_agent_uninstall_role
+```
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+To run the playbook:
+
+```bash
+ansible-playbook -i inventory.ini uninstall_agent.yml
+```
+
