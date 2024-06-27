@@ -3,7 +3,6 @@
 
 **File: `elastic_agent_standalone/README.md`**
 
-```markdown
 # Elastic Agent Standalone Role
 
 This Ansible role installs and configures the Elastic Agent on Ubuntu and RedHat servers in standalone mode.
@@ -33,7 +32,7 @@ elastic_agent_standalone
   └── main.yml
 ```
 
-### Variables
+## Variables
 
 - `elastic_agent_version`: Version of Elastic Agent to install (default: "7.12.0")
 - `elastic_agent_url`: URL to download Elastic Agent (default: "https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-{{ elastic_agent_version }}-linux-x86_64.tar.gz")
@@ -43,7 +42,7 @@ elastic_agent_standalone
 - `elasticsearch_username`: Elasticsearch username (default: "elastic")
 - `elasticsearch_password`: Elasticsearch password (default: "changeme")
 
-### Usage
+## Usage
 
 Include this role in your playbook:
 
@@ -54,7 +53,7 @@ Include this role in your playbook:
   - elastic_agent_standalone
 ```
 
-### Tasks
+## Tasks
 
 - Install Dependencies: Ensures the necessary packages (e.g., expect) are installed.
 - Check Existing Installation: Checks if Elastic Agent is already installed.
@@ -67,7 +66,7 @@ Include this role in your playbook:
 - Start and Enable Service: Starts and enables the Elastic Agent service.
 - Check and Display Service Status: Checks and displays the status of the Elastic Agent service.
 
-### Example Playbook
+## Example Playbook
 
 ```yaml
 - hosts: all
@@ -86,3 +85,4 @@ To run the playbook:
 ```bash
 ansible-playbook -i inventory.ini deploy.yml
 ```
+
