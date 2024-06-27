@@ -1,8 +1,4 @@
 
-## README.md for `elastic_agent_standalone`
-
-**File: `elastic_agent_standalone/README.md`**
-
 # Elastic Agent Standalone Role
 
 This Ansible role installs and configures the Elastic Agent on Ubuntu and RedHat servers in standalone mode.
